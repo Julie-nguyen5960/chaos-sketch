@@ -1,25 +1,12 @@
-document.body.style.margin   = 0
-document.body.style.overflow = `hidden`
+function setup() {
 
-const cnv = document.getElementById (`cnv_element`)
-cnv.width = innerWidth
-cnv.height = innerHeight
-
-const ctx = cnv.getContext (`2d`)
-
-const draw_frame = ms => {
-   ctx.fillStyle = `turquoise`
-   ctx.fillRect (0, 0, innerWidth, innerHeight)
-
-   const seconds = (ms / 1000)
-   console.log (seconds.toFixed (2))
-
-   requestAnimationFrame (draw_frame)
-}
-
-draw_frame ()
-
-onresize = () => {
-   cnv.width = innerWidth
-   cnv.height = innerHeight   
-}
+   createCanvas(innerHeight,innerHeight);
+   background(245);
+   textAlign(CENTER);
+   textSize(20);
+      
+   let words = RiTa.tokenize("gojo.txt")
+   for (let i=0; i < words.length; i++) {
+       text(words[i], 100, 50 + i*20);
+   }
+ }
