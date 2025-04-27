@@ -23,13 +23,14 @@ const sketch = p => {
     p.textSize(1);
     p.fill(255);
 
-    
+    //combine array of text elements
     let fullText = serresText.join(' ');
     words = RiTa.tokenize(fullText);
 
     let x = 100;
     let y = 100;
 
+    //for loop for each words
     for (let i = 0; i < words.length; i++) {
       let word = words[i];
       wordObjects.push({
@@ -40,6 +41,7 @@ const sketch = p => {
         vy: p.random(-1.5, 1.5)
       });
 
+      //adjusting the positions of the words
       x += p.textWidth(word) + 10;
       if (x > p.width - 100) {
         x = 100;
@@ -63,12 +65,14 @@ const sketch = p => {
       }
     };
 
+    //stops draw function from looping 
     p.noLoop();
     drawWords();
     capturePixels();
     p.frameRate(p.random(1, 120));
   }
 
+  // controls animation of the words
   p.draw = () => {
     if (!animate) return;
   
@@ -81,10 +85,12 @@ const sketch = p => {
       if (obj.x < 0 || obj.x > p.width) obj.vx *= -1;
       if (obj.y < 0 || obj.y > p.height) obj.vy *= -1;
   
+      //loops the glitch effects 
       for (let i = 0; i < 3; i++) {
         let glitchX = obj.x + p.random(-8, 8);
         let glitchY = obj.y + p.random(-2, 2);
-  
+        
+        //random values for glitch effects
         if (p.random() < 0.2) {
           p.fill(p.random(100, 255), p.random(100, 255), p.random(100, 255));
         } else {
@@ -102,6 +108,7 @@ const sketch = p => {
     glitchSlices(); // <-- slice effect
   }
 
+  // draws the words at a specific (x,y) position
   function drawWords() {
     p.background(245);
     p.fill(0);
