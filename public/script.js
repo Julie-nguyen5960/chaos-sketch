@@ -2,14 +2,7 @@ import { RiTa } from "https://esm.sh/rita";
 import p5 from 'https://cdn.jsdelivr.net/npm/p5@1.11.3/+esm'
 import tone from 'https://cdn.jsdelivr.net/npm/tone@15.0.4/+esm'
 
-
-// console.log (RiTa)
-
-// const gojoText = await fetch ('gojo.txt')
-//   .then(response => response.text())
-
-// console.log (gojoText)
-
+//variables
 const sketch = p => {
   let serresText = [];
   let synth;
@@ -18,16 +11,19 @@ const sketch = p => {
   let prxl = [];
   let animate = false;
 
+  //Information and Thinking txt file
   p.preload = () => {
     serresText = p.loadStrings('serres.txt');
   }
 
+  //canvas properties
   p.setup = () => {
     p.createCanvas(p.windowHeight, p.windowHeight);
     p.textAlign(p.CENTER);
-    p.textSize(20);
+    p.textSize(1);
     p.fill(255);
 
+    
     let fullText = serresText.join(' ');
     words = RiTa.tokenize(fullText);
 
@@ -50,6 +46,22 @@ const sketch = p => {
         y += 40;
       }
     }
+
+    // Initialize Tone.js Synth
+    synth = new Tone.Synth().toDestination();
+    
+
+    // Unlock Tone.js on first interaction
+    p.mousePressed = () => {
+      Tone.start();  // Unlock audio context
+      animate = !animate;
+      if (animate) {
+        p.loop();
+      } else {
+        p.noLoop();
+        drawWords();
+      }
+    };
 
     p.noLoop();
     drawWords();
@@ -87,18 +99,7 @@ const sketch = p => {
       }
     }
   
-
     glitchSlices(); // <-- slice effect
-  }
-
-  p.mousePressed = () => {
-    animate = !animate;
-    if (animate) {
-      p.loop();
-    } else {
-      p.noLoop();
-      drawWords();
-    }
   }
 
   function drawWords() {
@@ -138,12 +139,11 @@ const sketch = p => {
 
       if (synth) {
         let freq = p.random(100, 1000); // random frequency
-        synth.triggerAttackRelease(freq, "16n");
+        synth.triggerAttackRelease(freq, "8n",);
       }
     }
   }
 }
-
 
 // Create new p5 instance
 new p5(sketch);
