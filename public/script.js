@@ -1,9 +1,10 @@
 import { RiTa } from "https://esm.sh/rita";
-import p5 from 'https://cdn.jsdelivr.net/npm/p5@1.11.3/+esm'
-import tone from 'https://cdn.jsdelivr.net/npm/tone@15.0.4/+esm'
+import p5 from "https://cdn.jsdelivr.net/npm/p5@1.11.3/+esm";
+import * as Tone from "https://cdn.jsdelivr.net/npm/tone@15.1.22/+esm";
+// console.log(Tone);
 
 //variables
-const sketch = p => {
+const sketch = (p) => {
   let serresText = [];
   let synth;
   let words = [];
@@ -13,8 +14,8 @@ const sketch = p => {
 
   //Information and Thinking txt file
   p.preload = () => {
-    serresText = p.loadStrings('serres.txt');
-  }
+    serresText = p.loadStrings("serres.txt");
+  };
 
   //canvas properties
   p.setup = () => {
@@ -24,7 +25,7 @@ const sketch = p => {
     p.fill(255);
 
     //combine array of text elements
-    let fullText = serresText.join(' ');
+    let fullText = serresText.join(" ");
     words = RiTa.tokenize(fullText);
 
     let x = 100;
@@ -38,7 +39,7 @@ const sketch = p => {
         x: x,
         y: y,
         vx: p.random(-1.5, 1.5),
-        vy: p.random(-1.5, 1.5)
+        vy: p.random(-1.5, 1.5),
       });
 
       //adjusting the positions of the words
@@ -51,11 +52,10 @@ const sketch = p => {
 
     // Initialize Tone.js Synth
     synth = new Tone.Synth().toDestination();
-    
 
     // Unlock Tone.js on first interaction
     p.mousePressed = () => {
-      Tone.start();  // Unlock audio context
+      Tone.start(); // Unlock audio context
       animate = !animate;
       if (animate) {
         p.loop();
@@ -65,38 +65,38 @@ const sketch = p => {
       }
     };
 
-    //stops draw function from looping 
+    //stops draw function from looping
     p.noLoop();
     drawWords();
     capturePixels();
     p.frameRate(p.random(1, 120));
-  }
+  };
 
   // controls animation of the words
   p.draw = () => {
     if (!animate) return;
-  
+
     p.background(p.random(0, 20));
-  
+
     for (let obj of wordObjects) {
       obj.x += obj.vx;
       obj.y += obj.vy;
-  
+
       if (obj.x < 0 || obj.x > p.width) obj.vx *= -1;
       if (obj.y < 0 || obj.y > p.height) obj.vy *= -1;
-  
-      //loops the glitch effects 
+
+      //loops the glitch effects
       for (let i = 0; i < 3; i++) {
         let glitchX = obj.x + p.random(-8, 8);
         let glitchY = obj.y + p.random(-2, 2);
-        
+
         //random values for glitch effects
         if (p.random() < 0.2) {
           p.fill(p.random(100, 255), p.random(100, 255), p.random(100, 255));
         } else {
           p.fill(255);
         }
-  
+
         p.push();
         p.translate(glitchX, glitchY);
         p.scale(p.random(0.8, 1.2), 1);
@@ -104,9 +104,9 @@ const sketch = p => {
         p.pop();
       }
     }
-  
+
     glitchSlices(); // <-- slice effect
-  }
+  };
 
   // draws the words at a specific (x,y) position
   function drawWords() {
@@ -125,18 +125,15 @@ const sketch = p => {
       prxl[x] = [];
       for (let y = 0; y < p.height; y++) {
         let idx = (x + p.width * y) * 4;
-        prxl[x][y] = [
-          p.pixels[idx + 0],
-          p.pixels[idx + 1],
-          p.pixels[idx + 2]
-        ];
+        prxl[x][y] = [p.pixels[idx + 0], p.pixels[idx + 1], p.pixels[idx + 2]];
       }
     }
     p.updatePixels();
   }
 
   function glitchSlices() {
-    if (p.random() < 0.1) { // random chance to slice
+    if (p.random() < 0.1) {
+      // random chance to slice
       let y = p.floor(p.random(p.height));
       let h = p.floor(p.random(5, 20));
       let offset = p.floor(p.random(-20, 20));
@@ -146,11 +143,11 @@ const sketch = p => {
 
       if (synth) {
         let freq = p.random(100, 1000); // random frequency
-        synth.triggerAttackRelease(freq, "8n",);
+        synth.triggerAttackRelease(freq, "8n");
       }
     }
   }
-}
+};
 
 // Create new p5 instance
 new p5(sketch);
